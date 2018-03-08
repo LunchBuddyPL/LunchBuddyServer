@@ -21,6 +21,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "jacoco"
+apply plugin: 'groovy'
 
 group = 'pl.lunchbuddy'
 version = '0.0.1-SNAPSHOT'
@@ -51,6 +52,17 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('io.projectreactor:reactor-test')
 	testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+	testCompile 'org.spockframework:spock-spring:1.0-groovy-2.4'
 	testCompile 'org.objenesis:objenesis:2.2'
 	testCompile 'cglib:cglib-nodep:3.2.0'
 }
+
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+		html.enabled false
+	}
+}
+
+check.dependsOn jacocoTestReport

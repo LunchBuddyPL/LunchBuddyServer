@@ -14,6 +14,7 @@ class Group(val name: String, creator: User, defaultOptions: Set<MealOption>) {
     init {
         addMember(creator)
         code = generateCode()
+        if(defaultOptions.isEmpty()) throw IllegalArgumentException("Meal options can not be empty")
         mealOptions.addAll(defaultOptions)
     }
 
