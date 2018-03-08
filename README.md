@@ -1,1 +1,1 @@
-# LunchBuddyServer [![Build Status](https://travis-ci.org/LunchBuddyPL/LunchBuddyServer.svg?branch=master)](https://travis-ci.org/LunchBuddyPL)
+# LunchBuddyServer [![Build Status](https://travis-ci.org/LunchBuddyPL/LunchBuddyServer.svg?branch=master)](https://travis-ci.org/LunchBuddyPL) [![codecov](https://codecov.io/gh/LunchBuddyPL/LunchBuddyServer/branch/master/graph/badge.svg)](https://codecov.io/gh/LunchBuddyPL/LunchBuddyServer)
