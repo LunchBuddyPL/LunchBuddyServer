@@ -9,6 +9,12 @@ services:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
+  lunchbuddy_app:
+    image: lunchbuddy/server
+    container_name: 'lunchbuddy_app'
+    hostname: lunchbuddy
+    ports:
+      - "8080:8080"
 
 volumes:
   mongodata:
