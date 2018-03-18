@@ -1,23 +1,20 @@
 package pl.lunchbuddy.server.user
 
-import com.google.common.cache.Cache
-import com.google.common.cache.CacheBuilder
-import pl.lunchbuddy.server.user.domain.User
 import pl.lunchbuddy.server.user.api.UserRepository
+import pl.lunchbuddy.server.user.domain.User
 
 
 class InMemoryUserRepository : UserRepository {
 
-    var cache: Cache<String, User> = CacheBuilder.newBuilder()
-            .maximumSize(1000)
-            .build()
+    private var cache: MutableMap<String, User> = mutableMapOf()
+
 
     override fun findById(id: String): User? {
-        return cache.getIfPresent(id)
+        return cache[id]
     }
 
     override fun save(user: User) {
-        cache.put(user.id, user)
+        cache[user.id] = user
     }
 
 }

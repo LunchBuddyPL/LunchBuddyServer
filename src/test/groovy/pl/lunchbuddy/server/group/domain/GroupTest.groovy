@@ -3,14 +3,18 @@ package pl.lunchbuddy.server.group.domain
 import pl.lunchbuddy.server.user.domain.User
 import spock.lang.Specification
 
+import java.time.LocalTime
+
 class GroupTest extends Specification {
 
 	private User creator
 	private Set<MealOption> defaultOptions
+	private MealTime mealTime
 
 	void setup() {
 		creator = new User("creator")
 		defaultOptions = [new MealOption("pizza")] as Set
+		mealTime = new MealTime(LocalTime.of(10, 0), LocalTime.of(12, 00))
 	}
 
 	def "new group should contain its creator as a member"() {
@@ -60,13 +64,13 @@ class GroupTest extends Specification {
 
 	def "group should be created with at leas one meal option"() {
 		when:
-		def group = new Group("name", creator, defaultOptions)
+		def group = new Group("name", mealTime,creator, defaultOptions)
 
 		then:
 		group.mealOptions.size() == defaultOptions.size()
 
 		when:
-		def group2 = new Group("name", creator, [] as Set)
+		def group2 = new Group("name", mealTime,creator, [] as Set)
 
 		then:
 		thrown(IllegalArgumentException)
@@ -84,9 +88,7 @@ class GroupTest extends Specification {
 		group.mealOptions.contains(option)
 	}
 
-
-
 	private Group newGroup(String name) {
-		new Group(name, creator, defaultOptions)
+		new Group(name, mealTime, creator, defaultOptions)
 	}
 }

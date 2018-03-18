@@ -3,12 +3,13 @@ package pl.lunchbuddy.server.group.api
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import pl.lunchbuddy.server.common.CommandDispatcher
 import pl.lunchbuddy.server.group.domain.Group
 
 
 @RestController
 @RequestMapping("/group")
-class GroupEndpoint(private var groupApi: GroupApi) {
+class GroupEndpoint(private var groupApi: GroupApi, private var commandDispatcher: CommandDispatcher) {
 
     @GetMapping("/{id}")
     fun getGroup(@PathVariable(value = "id") id: String): Group? {
@@ -21,16 +22,21 @@ class GroupEndpoint(private var groupApi: GroupApi) {
     }
 
     @PostMapping
-    fun addGroup(@RequestBody groupDto: GroupDto): ResponseEntity<String> {
-        val group = groupApi.addGroup(groupDto)
+    fun addGroup(@RequestBody cmd: CreateGroupCmd): ResponseEntity<String> {
+        val group = commandDispatcher.handle(cmd)
 
         val location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(group).toUri()
 
-        return ResponseEntity.created(location).body(group)
+        return ResponseEntity.created(location).body(group.toString())
+    }
 
 
+    @PutMapping
+    fun addMember(@RequestBody cmd: AddGroupMemberCmd): ResponseEntity<Void> {
+        commandDispatcher.handle(cmd)
+        return ResponseEntity.accepted().build()
     }
 
 }

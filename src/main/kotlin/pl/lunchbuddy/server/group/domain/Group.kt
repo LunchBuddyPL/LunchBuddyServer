@@ -4,17 +4,19 @@ import pl.lunchbuddy.server.user.domain.User
 import java.util.*
 
 
-class Group(val name: String, creator: User, defaultOptions: Set<MealOption>) {
+class Group(val name: String,
+            val mealTime: MealTime,
+            creator: User,
+            defaultOptions: Set<MealOption>) {
 
     private var members: MutableSet<User> = mutableSetOf()
     private var mealOptions: MutableSet<MealOption> = mutableSetOf()
     val code: String
 
-
     init {
+        if (defaultOptions.isEmpty()) throw IllegalArgumentException("Meal options can not be empty")
         addMember(creator)
         code = generateCode()
-        if(defaultOptions.isEmpty()) throw IllegalArgumentException("Meal options can not be empty")
         mealOptions.addAll(defaultOptions)
     }
 
@@ -35,7 +37,7 @@ class Group(val name: String, creator: User, defaultOptions: Set<MealOption>) {
     }
 
     override fun toString(): String {
-        return "Group(name='$name', members=$members, mealOptions=$mealOptions, code='$code')"
+        return "Group(name='$name', mealTime=$mealTime, members=$members, mealOptions=$mealOptions, code='$code')"
     }
 
 

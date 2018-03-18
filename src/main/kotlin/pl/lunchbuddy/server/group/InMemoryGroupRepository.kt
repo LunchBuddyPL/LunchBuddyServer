@@ -1,27 +1,23 @@
 package pl.lunchbuddy.server.group
 
-import com.google.common.cache.Cache
-import com.google.common.cache.CacheBuilder
 import pl.lunchbuddy.server.group.api.GroupRepository
 import pl.lunchbuddy.server.group.domain.Group
 
 
 class InMemoryGroupRepository : GroupRepository {
 
-    var cache: Cache<String, Group> = CacheBuilder.newBuilder()
-            .maximumSize(1000)
-            .build()
+    private var cache: MutableMap<String, Group> = mutableMapOf()
 
     override fun findAll(): Collection<Group> {
-        return cache.asMap().values
+        return cache.values
     }
 
     override fun findById(id: String): Group? {
-        return cache.getIfPresent(id)
+        return cache[id]
     }
 
     override fun save(group: Group) {
-        cache.put(group.code, group)
+        cache[group.code] = group
     }
 
 }

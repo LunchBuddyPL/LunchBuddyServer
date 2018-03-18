@@ -1,20 +1,31 @@
 package pl.lunchbuddy.server.user.api
 
+import pl.lunchbuddy.server.user.InMemoryUserRepository
+import pl.lunchbuddy.server.user.domain.FakeUser
 import spock.lang.Specification
 
 class UserApiTest extends Specification {
 
-	def "user should be created with provided name, user id should be returned"() {
+	static UserApi api
+	static UserRepository repository
+
+	void setupSpec() {
+		repository = new InMemoryUserRepository()
+		api = new UserModuleConfig().userApi(repository)
+	}
+
+	def "should find user by given id"() {
 		given:
-		def api = new UserModuleConfig().userApi()
-		def name = "name"
+		def fakeUser = new FakeUser()
+		repository.save(fakeUser.INSTANCE)
 
 		when:
-		def id = api.addUser(new UserDto(name))
+		def result = api.getUser(fakeUser.INSTANCE.id)
 
 		then:
-		id
-		api.getUser(id).name == name
+		result
+		result.id == fakeUser.INSTANCE.id
 
 	}
+
 }
