@@ -1,20 +1,17 @@
+sudo: required
+
 language: java
 jdk:
-- oraclejdk8
-
-
-sudo: required
+  - oraclejdk8
 
 services:
   - docker
 
-
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-
 deploy:
   provider: script
-  script: bash docker_push
-    on:
-      branch: master
+  script: bash docker_push.sh
+  on:
+    branch: master
