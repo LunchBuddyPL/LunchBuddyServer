@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 
-class User(val name: String) {
+open class User(val name: String) {
 
     val id: String = UUID.randomUUID().toString()
     val creationDate: LocalDateTime = LocalDateTime.now()

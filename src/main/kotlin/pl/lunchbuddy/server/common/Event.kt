@@ -1,5 +1,4 @@
 package pl.lunchbuddy.server.common
 
 
-interface Event {
-}
+interface Event : CommandResult

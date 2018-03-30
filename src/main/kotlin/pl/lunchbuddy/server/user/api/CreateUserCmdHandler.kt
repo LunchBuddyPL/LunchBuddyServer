@@ -5,19 +5,17 @@ import pl.lunchbuddy.server.common.EventBus
 import pl.lunchbuddy.server.user.domain.User
 
 
-class CreateUserCmdHandler(private var repository: UserRepository, private var eventBus: EventBus) : CommandHandler<CreateUserCmd, String> {
+class CreateUserCmdHandler(private var repository: UserRepository) : CommandHandler<CreateUserCmd, UserCreatedEvent> {
 
     override fun getClazz(): Class<CreateUserCmd> {
         return CreateUserCmd::class.java
     }
 
-    override fun execute(command: CreateUserCmd): String {
+    override fun execute(command: CreateUserCmd): UserCreatedEvent {
         val user = User(command.name)
 
         repository.save(user)
 
-        eventBus.handle(UserCreatedEvent(userId = user.id))
-
-        return user.id
+        return UserCreatedEvent(userId = user.id)
     }
 }

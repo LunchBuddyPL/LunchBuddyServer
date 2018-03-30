@@ -7,6 +7,7 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		jcenter()
 		maven { url "https://plugins.gradle.org/m2/" }
 	}
 	dependencies {
@@ -14,21 +15,26 @@ buildscript {
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
 		classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:${gradleDockerVersion}")
+		classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
 	}
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "jacoco"
 apply plugin: 'groovy'
 apply plugin: 'com.palantir.docker'
+apply plugin: 'org.asciidoctor.convert'
 
 group = 'pl.lunchbuddy'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
 
 compileKotlin {
 	kotlinOptions.jvmTarget = "1.8"
@@ -52,6 +58,7 @@ dependencies {
 	compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
 
 	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+	testCompile group: 'org.springframework.restdocs', name:'spring-restdocs-mockmvc'
 	testCompile group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4'
 	testCompile group: 'org.spockframework', name: 'spock-spring', version: '1.1-groovy-2.4'
 	testCompile group: 'org.objenesis', name: 'objenesis', version: '2.2'
@@ -78,4 +85,24 @@ docker {
 	dockerfile file('./docker/lunchbuddy')
 	files jar.archivePath
 	buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}
+
+// Endpoint documentation
+
+//AsciiDoctor task - generates html from docs/manual.adoc
+asciidoctor {
+	dependsOn test
+	sourceDir 'src/docs'
+	outputDir "${buildDir}/asciidoc"
+	attributes \
+ 			'snippets': snippetsDir
+}.doLast { // copy everything to resources static content
+	copy {
+		from ("${buildDir}/asciidoc/html5")
+		into "${buildDir}/resources/main/static"
+	}
+}
+
+jar {
+	dependsOn asciidoctor
 }

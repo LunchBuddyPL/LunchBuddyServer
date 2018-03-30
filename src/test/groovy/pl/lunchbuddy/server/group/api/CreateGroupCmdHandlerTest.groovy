@@ -18,7 +18,7 @@ class CreateGroupCmdHandlerTest extends Specification {
 	static GroupRepository repository
 	static UserRepository userRepository
 
-	def from = LocalTime.now()
+	def from = LocalTime.of(10, 00)
 	def to = from.plusHours(1)
 
 	def static fakeUser = new FakeUser()
@@ -27,7 +27,7 @@ class CreateGroupCmdHandlerTest extends Specification {
 		repository = new InMemoryGroupRepository()
 		userRepository = new InMemoryUserRepository()
 		userApi = new UserModuleConfig().userApi(userRepository)
-		command = new GroupModuleConfig().createGroupCommandHandler(repository, userApi, { event -> event })
+		command = new GroupModuleConfig().createGroupCommandHandler(repository, userApi)
 
 		userRepository.save(fakeUser.INSTANCE)
 
@@ -50,11 +50,11 @@ class CreateGroupCmdHandlerTest extends Specification {
 
 
 		when:
-		def id = command.execute(new CreateGroupCmd(groupName, fakeUser.INSTANCE.id, from, to))
+		def event = command.execute(new CreateGroupCmd(groupName, fakeUser.INSTANCE.id, from, to))
 
 		then:
-		id
-		with(repository.findById(id)) {
+		event
+		with(repository.findById(event.getGroupId())) {
 			name == groupName
 			members.size() == 1
 			members.find({ m -> m.id == fakeUser.INSTANCE.id })

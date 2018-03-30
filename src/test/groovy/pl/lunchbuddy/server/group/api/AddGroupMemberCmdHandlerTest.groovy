@@ -24,7 +24,7 @@ class AddGroupMemberCmdHandlerTest extends Specification {
 		repository = new InMemoryGroupRepository()
 		userRepository = new InMemoryUserRepository()
 		userApi = new UserModuleConfig().userApi(userRepository)
-		command = new GroupModuleConfig().addGroupMemberCommandHandler(repository, userApi, { event -> event })
+		command = new GroupModuleConfig().addGroupMemberCommandHandler(repository, userApi)
 
 		userRepository.save(fakeUser.INSTANCE)
 		repository.save(fakeGroup.INSTANCE)

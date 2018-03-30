@@ -1,0 +1,86 @@
+= LunchBuddy API Reference
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+
+[[headers]]
+== Group
+=== Creation new group
+
+Curl request :
+
+include::{snippets}/group-create/curl-request.adoc[]
+include::{snippets}/group-create/http-request.adoc[]
+include::{snippets}/group-create/request-body.adoc[]
+
+Response :
+
+include::{snippets}/group-create/http-response.adoc[]
+
+include::{snippets}/group-create/response-fields.adoc[]
+
+
+=== Getting group
+
+Curl request :
+
+include::{snippets}/group-get-one/curl-request.adoc[]
+include::{snippets}/group-get-one/http-request.adoc[]
+
+Response :
+
+include::{snippets}/group-get-one/http-response.adoc[]
+
+include::{snippets}/group-get-one/response-fields.adoc[]
+
+
+=== Getting all groups
+
+Curl request :
+
+include::{snippets}/group-get-all/curl-request.adoc[]
+include::{snippets}/group-get-all/http-request.adoc[]
+
+Response :
+
+include::{snippets}/group-get-all/http-response.adoc[]
+
+include::{snippets}/group-get-all/response-fields.adoc[]
+
+
+== User
+=== Creation new user
+
+Curl request :
+
+include::{snippets}/user-create/curl-request.adoc[]
+include::{snippets}/user-create/http-request.adoc[]
+include::{snippets}/user-create/request-body.adoc[]
+
+
+Response :
+
+include::{snippets}/user-create/http-response.adoc[]
+
+include::{snippets}/user-create/response-fields.adoc[]
+
+
+=== Getting user
+
+Curl request :
+
+include::{snippets}/user-get-one/curl-request.adoc[]
+include::{snippets}/user-get-one/http-request.adoc[]
+include::{snippets}/user-get-one/request-body.adoc[]
+
+Response :
+
+include::{snippets}/user-get-one/http-response.adoc[]
+
+include::{snippets}/user-get-one/response-fields.adoc[]
+
+

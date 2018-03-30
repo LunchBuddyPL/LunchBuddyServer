@@ -15,8 +15,8 @@ class UserModuleConfig {
     }
 
     @Bean
-    fun createUserCommandHandler(repository: UserRepository, eventBus: EventBus): CreateUserCmdHandler {
-        return CreateUserCmdHandler(repository, eventBus)
+    fun createUserCommandHandler(repository: UserRepository): CreateUserCmdHandler {
+        return CreateUserCmdHandler(repository)
     }
 
     @Bean

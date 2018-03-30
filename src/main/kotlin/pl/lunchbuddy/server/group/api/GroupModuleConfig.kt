@@ -2,7 +2,6 @@ package pl.lunchbuddy.server.group.api
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import pl.lunchbuddy.server.common.EventBus
 import pl.lunchbuddy.server.group.InMemoryGroupRepository
 import pl.lunchbuddy.server.user.api.UserApi
 
@@ -16,13 +15,13 @@ class GroupModuleConfig {
     }
 
     @Bean
-    fun createGroupCommandHandler(repository: GroupRepository, userApi: UserApi, eventBus: EventBus): CreateGroupCmdHandler {
-        return CreateGroupCmdHandler(repository, userApi, eventBus)
+    fun createGroupCommandHandler(repository: GroupRepository, userApi: UserApi): CreateGroupCmdHandler {
+        return CreateGroupCmdHandler(repository, userApi)
     }
 
     @Bean
-    fun addGroupMemberCommandHandler(repository: GroupRepository, userApi: UserApi, eventBus: EventBus): AddGroupMemberCmdHandler {
-        return AddGroupMemberCmdHandler(repository, userApi, eventBus)
+    fun addGroupMemberCommandHandler(repository: GroupRepository, userApi: UserApi): AddGroupMemberCmdHandler {
+        return AddGroupMemberCmdHandler(repository, userApi)
     }
 
     @Bean

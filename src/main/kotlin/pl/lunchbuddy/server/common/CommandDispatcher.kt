@@ -3,5 +3,5 @@ package pl.lunchbuddy.server.common
 
 interface CommandDispatcher {
 
-    fun <T : Command> handle(command: T) : Any?
+    fun <T : Command> handle(command: T) : CommandResult
 }

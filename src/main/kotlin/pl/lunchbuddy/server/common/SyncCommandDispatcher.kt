@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct
 
 
 @Component
-class DefaultCommandDispatcher : CommandDispatcher {
+class SyncCommandDispatcher : CommandDispatcher {
 
     private val log: Logger = LoggerFactory.getLogger(javaClass.canonicalName)
     private val handlersMap: Map<Class<*>, CommandHandler<Command, *>>
@@ -18,7 +18,7 @@ class DefaultCommandDispatcher : CommandDispatcher {
     }
 
 
-    override fun <T : Command> handle(command: T): Any? {
+    override fun <T : Command> handle(command: T): CommandResult {
         return handlersMap[command::class.java]?.execute(command)
                 ?: throw IllegalStateException("No handler for class : $command")
     }

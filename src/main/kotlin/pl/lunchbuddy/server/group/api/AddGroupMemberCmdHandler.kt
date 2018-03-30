@@ -1,17 +1,16 @@
 package pl.lunchbuddy.server.group.api
 
 import pl.lunchbuddy.server.common.CommandHandler
-import pl.lunchbuddy.server.common.EventBus
 import pl.lunchbuddy.server.user.api.UserApi
 
 
-class AddGroupMemberCmdHandler(private var repository: GroupRepository, private var userApi: UserApi, private var eventBus: EventBus) : CommandHandler<AddGroupMemberCmd, Nothing?> {
+class AddGroupMemberCmdHandler(private var repository: GroupRepository, private var userApi: UserApi) : CommandHandler<AddGroupMemberCmd, GroupMemberAddedEvent> {
 
     override fun getClazz(): Class<AddGroupMemberCmd> {
         return AddGroupMemberCmd::class.java
     }
 
-    override fun execute(command: AddGroupMemberCmd): Nothing? {
+    override fun execute(command: AddGroupMemberCmd): GroupMemberAddedEvent {
 
         val user = userApi.getUser(command.userId)
 
@@ -21,8 +20,6 @@ class AddGroupMemberCmdHandler(private var repository: GroupRepository, private 
 
         repository.save(group)
 
-        eventBus.handle(GroupMemberAddedEvent(command.groupId, command.userId))
-
-        return null
+        return GroupMemberAddedEvent(command.groupId, command.userId)
     }
 }

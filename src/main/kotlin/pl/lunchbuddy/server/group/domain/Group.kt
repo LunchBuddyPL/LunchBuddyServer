@@ -4,7 +4,7 @@ import pl.lunchbuddy.server.user.domain.User
 import java.util.*
 
 
-class Group(val name: String,
+open class Group(val name: String,
             val mealTime: MealTime,
             creator: User,
             defaultOptions: Set<MealOption>) {

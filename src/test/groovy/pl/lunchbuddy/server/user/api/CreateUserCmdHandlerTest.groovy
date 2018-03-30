@@ -10,7 +10,7 @@ class CreateUserCmdHandlerTest extends Specification {
 
 	void setupSpec() {
 		repository = new InMemoryUserRepository()
-		command = new UserModuleConfig().createUserCommandHandler(repository, { event -> event })
+		command = new UserModuleConfig().createUserCommandHandler(repository)
 
 	}
 
@@ -19,11 +19,11 @@ class CreateUserCmdHandlerTest extends Specification {
 		def userName = "name"
 
 		when:
-		def id = command.execute(new CreateUserCmd(userName))
+		def event = command.execute(new CreateUserCmd(userName))
 
 		then:
-		id
-		with(repository.findById(id)) {
+		event
+		with(repository.findById(event.userId)) {
 			name == userName
 		}
 

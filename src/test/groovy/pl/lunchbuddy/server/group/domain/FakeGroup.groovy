@@ -6,7 +6,7 @@ import java.time.LocalTime
 
 class FakeGroup {
 
-	public final LocalTime FROM = LocalTime.now()
+	public final LocalTime FROM = LocalTime.of(10,00)
 	public final LocalTime TO = FROM.plusHours(1)
 	public final User CREATOR = new User("name")
 	public final String GROUP_NAME = "any"
