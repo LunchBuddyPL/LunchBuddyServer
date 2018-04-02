@@ -16,7 +16,7 @@ class UserApiTest extends Specification {
 
 	def "should find user by given id"() {
 		given:
-		def fakeUser = new FakeUser()
+		def fakeUser = new FakeUser("name")
 		repository.save(fakeUser.INSTANCE)
 
 		when:

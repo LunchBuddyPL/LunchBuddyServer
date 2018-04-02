@@ -17,7 +17,6 @@ import spock.lang.Stepwise
 import java.time.LocalTime
 
 import static org.hamcrest.Matchers.notNullValue
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import static org.springframework.restdocs.payload.PayloadDocumentation.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -33,6 +32,8 @@ class GroupEndpointTest extends SpringContextTest {
 
 	@Shared
 	String groupId
+	@Shared
+	String groupCode
 
 	void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
@@ -51,17 +52,23 @@ class GroupEndpointTest extends SpringContextTest {
 						.content(mapper.writeValueAsString(cmd)))
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("groupId", Matchers.is(notNullValue())))
+				.andExpect(jsonPath("groupCode", Matchers.is(notNullValue())))
 				.andDo(document("group-create",
 				responseFields(
-						fieldWithPath("groupId").description("New Group ID")),
+						fieldWithPath("groupId").description("New Group ID"),
+						fieldWithPath("groupCode").description("Code which allows users to join group")),
 				requestBody(
 						beneathPath("name"))
 		)).andReturn()
 
-		groupId = new JsonSlurper().parseText(result.response.contentAsString).groupId
+
+		def response = new JsonSlurper().parseText(result.response.contentAsString)
+		groupId = response.groupId
+		groupCode = response.groupCode
 
 		then:
 		groupId
+		groupCode
 	}
 
 	def "should get group by it's id"() {
@@ -87,12 +94,32 @@ class GroupEndpointTest extends SpringContextTest {
 						.andWithPrefix("_embedded.groupList.[]", groupDescription())))
 	}
 
+	def "should add member to group"() {
+		given:
+		def cmd = new AddGroupMemberCmd(groupCode, fakeNewUser.id)
+
+		when:
+		this.mockMvc.perform(
+				MockMvcRequestBuilders.put("/group/member")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(mapper.writeValueAsString(cmd)))
+				.andExpect(status().isAccepted())
+				.andDo(document("group-add-member",
+				requestFields(
+						fieldWithPath("groupCode").description("Code of the group"),
+						fieldWithPath("userId").description("User id of new group member")
+				)))
+		then:
+		noExceptionThrown()
+	}
+
 	FieldDescriptor[] groupDescription() {
 		return [
 				fieldWithPath("_links.self.href").description("<<resources-group-links,links>>"),
 				fieldWithPath("name").description("Group name"),
 				fieldWithPath("mealTime").description("Configuration of group meal time"),
-				fieldWithPath("code").description("Group unique code"),
+				fieldWithPath("code.code").description("Group unique code"),
+				fieldWithPath("id.id").description("Group unique id"),
 				fieldWithPath("members").description("Collection of group members"),
 				fieldWithPath("members.[].name").description("Member name"),
 				fieldWithPath("members.[].id").description("Member id"),

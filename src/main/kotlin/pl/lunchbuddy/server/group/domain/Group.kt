@@ -1,28 +1,29 @@
 package pl.lunchbuddy.server.group.domain
 
 import pl.lunchbuddy.server.user.domain.User
+import pl.lunchbuddy.server.util.ShortCodeGenerator
 import java.util.*
 
 
 open class Group(val name: String,
-            val mealTime: MealTime,
-            creator: User,
-            defaultOptions: Set<MealOption>) {
+                 val mealTime: MealTime,
+                 creator: User,
+                 defaultOptions: Set<MealOption>) {
 
     private var members: MutableSet<User> = mutableSetOf()
     private var mealOptions: MutableSet<MealOption> = mutableSetOf()
-    val code: String
+    val code: GroupCode
+    val id: GroupId
 
     init {
         if (defaultOptions.isEmpty()) throw IllegalArgumentException("Meal options can not be empty")
         addMember(creator)
+        id = GroupId(UUID.randomUUID().toString())
         code = generateCode()
         mealOptions.addAll(defaultOptions)
     }
 
-    private fun generateCode(): String {
-        return UUID.randomUUID().toString()
-    }
+    private fun generateCode() = GroupCode(ShortCodeGenerator(8).generate())
 
     fun addMember(user: User) {
         members.add(user)

@@ -4,8 +4,8 @@ class FakeUser {
 
 	public final User INSTANCE
 
-	FakeUser() {
-		this.INSTANCE = new User("name")
+	FakeUser(String name) {
+		this.INSTANCE = new User(name)
 	}
 
 }

@@ -20,11 +20,11 @@ class GroupApiTest extends Specification {
 		repository.save(fakeGroup.INSTANCE)
 
 		when:
-		def result = api.getGroup(fakeGroup.INSTANCE.code)
+		def result = api.getGroup(fakeGroup.INSTANCE.id)
 
 		then:
 		result
-		result.code == fakeGroup.INSTANCE.code
+		result.id == fakeGroup.INSTANCE.id
 
 	}
 }

@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import pl.lunchbuddy.server.common.CommandDispatcher
-import pl.lunchbuddy.server.common.CommandResult
 import pl.lunchbuddy.server.group.domain.Group
+import pl.lunchbuddy.server.group.domain.GroupId
 
 
 @RestController
@@ -18,7 +18,7 @@ class GroupEndpoint(private var groupApi: GroupApi, private var commandDispatche
 
     @GetMapping("/{id}")
     fun getGroup(@PathVariable(value = "id") id: String): ResponseEntity<Resource<Group>> {
-        val group = groupApi.getGroup(id)
+        val group = groupApi.getGroup(GroupId(id))
         return ResponseEntity.ok(Resource(group, groupLink(group)))
     }
 
@@ -30,14 +30,13 @@ class GroupEndpoint(private var groupApi: GroupApi, private var commandDispatche
     }
 
     @PostMapping
-    fun addGroup(@RequestBody cmd: CreateGroupCmd): ResponseEntity<CommandResult> {
-        val group = commandDispatcher.handle(cmd)
-        val groupId = (group as GroupCreatedEvent).groupId
+    fun addGroup(@RequestBody cmd: CreateGroupCmd): ResponseEntity<GroupCreatedDto> {
+        val group = commandDispatcher.handle(cmd) as GroupCreatedEvent
         val location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(groupId).toUri()
+                .buildAndExpand(group.groupId).toUri()
 
-        return ResponseEntity.created(location).body(group)
+        return ResponseEntity.created(location).body(GroupCreatedDto(group.groupId.toString(), group.groupCode.toString()))
     }
 
 
@@ -49,7 +48,7 @@ class GroupEndpoint(private var groupApi: GroupApi, private var commandDispatche
 
     private fun groupLink(group: Group): Collection<Link> {
         return setOf(
-                ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(GroupEndpoint::class.java).getGroup(group.code)).withSelfRel()
+                ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(GroupEndpoint::class.java).getGroup(group.id.toString())).withSelfRel()
         )
     }
 

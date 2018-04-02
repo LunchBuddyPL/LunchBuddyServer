@@ -1,6 +1,7 @@
 package pl.lunchbuddy.server.group.api
 
 import pl.lunchbuddy.server.common.CommandHandler
+import pl.lunchbuddy.server.group.domain.GroupCode
 import pl.lunchbuddy.server.user.api.UserApi
 
 
@@ -14,12 +15,13 @@ class AddGroupMemberCmdHandler(private var repository: GroupRepository, private 
 
         val user = userApi.getUser(command.userId)
 
-        val group = repository.findById(command.groupId) ?: throw GroupNotFoundException.withId(command.groupId)
+        val group = repository.findByCode(GroupCode(command.groupCode))
+                ?: throw GroupNotFoundException.withCode(command.groupCode)
 
         group.addMember(user)
 
         repository.save(group)
 
-        return GroupMemberAddedEvent(command.groupId, command.userId)
+        return GroupMemberAddedEvent(group.id, command.userId)
     }
 }

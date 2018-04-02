@@ -2,6 +2,7 @@ package pl.lunchbuddy.server.group.api
 
 import pl.lunchbuddy.server.group.InMemoryGroupRepository
 import pl.lunchbuddy.server.group.domain.FakeGroup
+import pl.lunchbuddy.server.group.domain.GroupCode
 import pl.lunchbuddy.server.user.InMemoryUserRepository
 import pl.lunchbuddy.server.user.api.UserApi
 import pl.lunchbuddy.server.user.api.UserModuleConfig
@@ -17,7 +18,7 @@ class AddGroupMemberCmdHandlerTest extends Specification {
 	static GroupRepository repository
 	static UserRepository userRepository
 
-	def static fakeUser = new FakeUser()
+	def static fakeUser = new FakeUser("name")
 	def static fakeGroup = new FakeGroup()
 
 	void setupSpec() {
@@ -47,7 +48,7 @@ class AddGroupMemberCmdHandlerTest extends Specification {
 		def NOT_EXISTING_GROUP = "NOT_EXISTING_GROUP"
 
 		when:
-		command.execute(new AddGroupMemberCmd(NOT_EXISTING_GROUP, fakeUser.INSTANCE.id))
+		command.execute new AddGroupMemberCmd(NOT_EXISTING_GROUP, fakeUser.INSTANCE.id)
 
 		then:
 		thrown(GroupNotFoundException)
@@ -55,7 +56,7 @@ class AddGroupMemberCmdHandlerTest extends Specification {
 
 	def "should add new user to group and emmit event with group and user id"() {
 		when:
-		command.execute(new AddGroupMemberCmd(fakeGroup.INSTANCE.code, fakeUser.INSTANCE.id))
+		command.execute(new AddGroupMemberCmd(fakeGroup.INSTANCE.code.code, fakeUser.INSTANCE.id))
 
 		then:
 		noExceptionThrown()

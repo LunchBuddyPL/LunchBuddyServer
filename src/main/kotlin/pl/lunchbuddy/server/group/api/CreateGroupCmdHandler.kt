@@ -21,6 +21,6 @@ class CreateGroupCmdHandler(private var repository: GroupRepository, private var
 
         repository.save(group)
 
-        return GroupCreatedEvent(groupId = group.code)
+        return GroupCreatedEvent(group.id,group.code)
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import pl.lunchbuddy.server.common.CommandDispatcher
-import pl.lunchbuddy.server.common.CommandResult
 import pl.lunchbuddy.server.user.domain.User
 
 
@@ -26,7 +25,7 @@ class UserEndpoint(private var userApi: UserApi, private var commandDispatcher: 
     }
 
     @PostMapping
-    fun addUser(@RequestBody command: CreateUserCmd): ResponseEntity<CommandResult> {
+    fun addUser(@RequestBody command: CreateUserCmd): ResponseEntity<UserCreatedEvent> {
         val user = commandDispatcher.handle(command)
 
         val userId = (user as UserCreatedEvent).userId

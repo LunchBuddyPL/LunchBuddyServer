@@ -6,8 +6,8 @@ class GroupNotFoundException private constructor(message: String?) : RuntimeExce
 
     companion object {
 
-        fun withId(id: String): GroupNotFoundException {
-            return GroupNotFoundException("Can't find group with id : $id")
+        fun withCode(code: String): GroupNotFoundException {
+            return GroupNotFoundException("Can't find group with code : $code")
         }
     }
 

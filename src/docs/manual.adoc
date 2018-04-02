@@ -52,6 +52,24 @@ include::{snippets}/group-get-all/http-response.adoc[]
 include::{snippets}/group-get-all/response-fields.adoc[]
 
 
+=== Adding member to group
+
+
+Curl request :
+
+include::{snippets}/group-add-member/curl-request.adoc[]
+include::{snippets}/group-add-member/http-request.adoc[]
+include::{snippets}/group-add-member/request-body.adoc[]
+include::{snippets}/group-add-member/request-fields.adoc[]
+
+Response :
+
+include::{snippets}/group-add-member/http-response.adoc[]
+
+include::{snippets}/group-add-member/response-fields.adoc[]
+
+
+
 == User
 === Creation new user
 

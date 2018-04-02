@@ -11,16 +11,22 @@ class SyncCommandDispatcher : CommandDispatcher {
 
     private val log: Logger = LoggerFactory.getLogger(javaClass.canonicalName)
     private val handlersMap: Map<Class<*>, CommandHandler<Command, *>>
+    private val eventBus: EventBus
 
-    constructor(handlers: List<CommandHandler<*, *>>) {
+    constructor(handlers: List<CommandHandler<*, *>>, eventBus: EventBus) {
         //TODO Kotlin generics!! agrrr - why List<CommandHandler<Command,*>> is not being injected?
-        handlersMap = (handlers as List<CommandHandler<Command, *>>).associateBy({ it.getClazz() }, { it })
+        this.handlersMap = (handlers as List<CommandHandler<Command, *>>).associateBy({ it.getClazz() }, { it })
+        this.eventBus = eventBus
     }
 
 
-    override fun <T : Command> handle(command: T): CommandResult {
-        return handlersMap[command::class.java]?.execute(command)
+    override fun <T : Command> handle(command: T): Event {
+        val result = handlersMap[command::class.java]?.execute(command)
                 ?: throw IllegalStateException("No handler for class : $command")
+
+        eventBus.handle(result)
+
+        return result
     }
 
     @PostConstruct

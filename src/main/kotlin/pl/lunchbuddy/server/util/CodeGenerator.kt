@@ -1,4 +1,4 @@
-package pl.lunchbuddy.server.group.domain
+package pl.lunchbuddy.server.util
 
 interface CodeGenerator {
 

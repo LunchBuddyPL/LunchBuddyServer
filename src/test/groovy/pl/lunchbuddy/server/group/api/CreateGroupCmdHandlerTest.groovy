@@ -21,7 +21,7 @@ class CreateGroupCmdHandlerTest extends Specification {
 	def from = LocalTime.of(10, 00)
 	def to = from.plusHours(1)
 
-	def static fakeUser = new FakeUser()
+	def static fakeUser = new FakeUser("name")
 
 	void setupSpec() {
 		repository = new InMemoryGroupRepository()
@@ -54,7 +54,9 @@ class CreateGroupCmdHandlerTest extends Specification {
 
 		then:
 		event
-		with(repository.findById(event.getGroupId())) {
+		event.groupId
+		event.groupCode
+		with(repository.find(event.getGroupId())) {
 			name == groupName
 			members.size() == 1
 			members.find({ m -> m.id == fakeUser.INSTANCE.id })
